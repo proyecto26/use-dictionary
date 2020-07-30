@@ -6,13 +6,13 @@ enum Action {
 };
 
 type DictionaryAction<T, K extends keyof T> =
-  | { type: Action.UpdateValue, key: K, value: T[K] }
-  | { type: Action.CleanValue, key: K }
+  | { type: Action.UpdateValue; key: K; value: T[K] }
+  | { type: Action.CleanValue; key: K }
 
 const reducer = <T, K extends keyof T>(
   state: T,
   action: DictionaryAction<T, K>
-) => {
+): T => {
   switch (action.type) {
     case Action.UpdateValue:
       return { ...state, [action.key]: action.value };
