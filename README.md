@@ -19,7 +19,7 @@ const App: React.FC = () => {
 
   const onSubmit = useCallback((event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Create User!', state)
+    console.log('Create User!', state);
   }, [state]);
   
   return (
@@ -44,7 +44,7 @@ const App: React.FC = () => {
         Password:
         <input
           type="password"
-          value={state.name}
+          value={state.password}
           onChange={(e) => onUpdateValue('password', e.target?.value)}
         />
       </label>
