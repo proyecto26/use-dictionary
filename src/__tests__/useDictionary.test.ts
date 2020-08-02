@@ -28,7 +28,7 @@ describe('useDictionary hook', () => {
     expect(result.current.state.array).toHaveLength(3)
   })
 
-  it('should handle onCleanValue action', () => {
+  it('should handle onClearValue action', () => {
     const initialState = {
       boolean: false,
       string: '',
@@ -40,17 +40,34 @@ describe('useDictionary hook', () => {
     const { result } = renderHook(() => useDictionary(initialState))
 
     act(() => {
-      result.current.onCleanValue('boolean')
-      result.current.onCleanValue('string')
-      result.current.onCleanValue('number')
-      result.current.onCleanValue('object')
-      result.current.onCleanValue('array')
+      result.current.onClearValue('boolean')
+      result.current.onClearValue('string')
+      result.current.onClearValue('number')
+      result.current.onClearValue('object')
+      result.current.onClearValue('array')
     })
     expect(result.current.state.boolean).toBeUndefined()
     expect(result.current.state.string).toBeUndefined()
     expect(result.current.state.number).toBeUndefined()
     expect(result.current.state.object).toBeUndefined()
     expect(result.current.state.array).toBeUndefined()
+  })
+
+  it('should handle onClear action', () => {
+    const initialState = {
+      boolean: false,
+      string: '',
+      number: 0,
+      object: {},
+      array: [] 
+    }
+
+    const { result } = renderHook(() => useDictionary(initialState))
+
+    act(() => {
+      result.current.onClear()
+    })
+    expect(result.current.state).toMatchObject({})
   })
 
 })

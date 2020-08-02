@@ -1,6 +1,6 @@
 {
   "name": "use-dictionary",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A React useReducer() hook to use dictionaries (keys and values) 🔑",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

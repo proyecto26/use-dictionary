@@ -14,7 +14,9 @@ const App: React.FC = () => {
   };
   const {
     state,
-    onUpdateValue
+    onUpdateValue, // Update a value from the dictionary
+    onClearValue   // Remove a value from the dictionary
+    onClear        // Remove all values from the dictionary
   } = useDictionary(initialState);
 
   const onSubmit = useCallback((event: React.FormEvent) => {

@@ -2,12 +2,14 @@ import { useRef, useReducer, useCallback, useEffect, Reducer } from 'react';
 
 enum Action {
   UpdateValue,
-  CleanValue
+  ClearValue,
+  Clear,
 };
 
 type DictionaryAction<T, K extends keyof T> =
   | { type: Action.UpdateValue; key: K; value: T[K] }
-  | { type: Action.CleanValue; key: K }
+  | { type: Action.ClearValue; key: K }
+  | { type: Action.Clear }
 
 const reducer = <T, K extends keyof T>(
   state: T,
@@ -16,8 +18,10 @@ const reducer = <T, K extends keyof T>(
   switch (action.type) {
     case Action.UpdateValue:
       return { ...state, [action.key]: action.value };
-    case Action.CleanValue:
+    case Action.ClearValue:
       return { ...state, [action.key]: undefined };
+    case Action.Clear:
+      return {} as T;
     default:
       return state;
   }
@@ -34,24 +38,29 @@ export function useDictionary<T, K extends keyof T> (initialState: T) {
     };
   }, []);
 
+  const dispatchOnMounted: typeof dispatch = useCallback((action) => {
+    if (mounted.current) dispatch(action);
+  }, [mounted]);
+
   const onUpdateValue = useCallback(function (
     key: K,
     value: T[K]
   ) {
-    if (mounted.current)
-      dispatch({ type: Action.UpdateValue, key, value });
-  }, [mounted]);
+    dispatchOnMounted({ type: Action.UpdateValue, key, value });
+  }, []);
 
-  const onCleanValue = useCallback(function (
-    key: K
-  ) {
-    if (mounted.current)
-      dispatch({ type: Action.CleanValue, key });
-  }, [mounted]);
+  const onClearValue = useCallback(function (key: K) {
+    dispatchOnMounted({ type: Action.ClearValue, key });
+  }, []);
+
+  const onClear = useCallback(function () {
+    dispatchOnMounted({ type: Action.Clear });
+  }, []);
 
   return {
     state,
     onUpdateValue,
-    onCleanValue
+    onClearValue,
+    onClear,
   };
 }
