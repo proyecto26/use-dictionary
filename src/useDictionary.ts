@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useRef, useReducer, useCallback, useEffect, Reducer } from 'react';
 
 enum Action {
