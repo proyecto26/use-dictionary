@@ -1,6 +1,5 @@
 name: Release
 on:
-  pull_request:
   push:
     branches:
       - master
@@ -24,7 +23,9 @@ jobs:
         run: npm run lint
       - name: Run Tests
         run: npm run test
-      - name: NPM Release
+      - name: Build package
+        run: npm run build
+      - name: Publish package
         run: npm publish --registry=https://registry.npmjs.org
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
