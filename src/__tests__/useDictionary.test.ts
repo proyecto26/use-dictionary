@@ -70,4 +70,25 @@ describe('useDictionary hook', () => {
     expect(result.current.state).toMatchObject({})
   })
 
+  it('should handle onToggleValue action', () => {
+    const initialState = {
+      boolean1: false,
+      boolean2: true,
+      boolean3: false,
+      boolean4: true,
+    }
+
+    const { result } = renderHook(() => useDictionary(initialState))
+
+    act(() => {
+      result.current.onToggleValue('boolean1')
+      result.current.onToggleValue('boolean2')
+      result.current.onToggleValue('boolean3')
+      result.current.onToggleValue('boolean4')
+    })
+    expect(result.current.state.boolean1).toBeTruthy()
+    expect(result.current.state.boolean2).toBeFalsy()
+    expect(result.current.state.boolean3).toBeTruthy()
+    expect(result.current.state.boolean4).toBeFalsy()
+  })
 })

@@ -5,12 +5,14 @@ enum Action {
   UpdateValue,
   ClearValue,
   Clear,
+  ToggleValue,
 };
 
 type DictionaryAction<T, K extends keyof T> =
   | { type: Action.UpdateValue; key: K; value: T[K] }
   | { type: Action.ClearValue; key: K }
   | { type: Action.Clear }
+  | { type: Action.ToggleValue; key: K }
 
 const reducer = <T, K extends keyof T>(
   state: T,
@@ -23,6 +25,8 @@ const reducer = <T, K extends keyof T>(
       return { ...state, [action.key]: undefined };
     case Action.Clear:
       return {} as T;
+    case Action.ToggleValue:
+      return { ...state, [action.key]: !state[action.key] };
     default:
       return state;
   }
@@ -58,10 +62,15 @@ export function useDictionary<T, K extends keyof T> (initialState: T) {
     dispatchOnMounted({ type: Action.Clear });
   }, []);
 
+  const onToggleValue = useCallback(function (key: K) {
+    dispatchOnMounted({ type: Action.ToggleValue, key });
+  }, []);
+
   return {
     state,
     onUpdateValue,
     onClearValue,
     onClear,
+    onToggleValue,
   };
 }
