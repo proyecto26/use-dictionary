@@ -1,23 +1,19 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { useRef, useReducer, useCallback, useEffect, Reducer } from 'react';
+import { useRef, useReducer, useCallback, useEffect, Reducer } from "react";
 
 enum Action {
   UpdateValue,
   ClearValue,
   Clear,
   ToggleValue,
-};
+}
 
 type DictionaryAction<T, K extends keyof T> =
   | { type: Action.UpdateValue; key: K; value: T[K] }
   | { type: Action.ClearValue; key: K }
   | { type: Action.Clear }
-  | { type: Action.ToggleValue; key: K }
+  | { type: Action.ToggleValue; key: K };
 
-const reducer = <T, K extends keyof T>(
-  state: T,
-  action: DictionaryAction<T, K>
-): T => {
+const reducer = <T extends object, K extends keyof T>(state: T, action: DictionaryAction<T, K>): T => {
   switch (action.type) {
     case Action.UpdateValue:
       return { ...state, [action.key]: action.value };
@@ -30,27 +26,27 @@ const reducer = <T, K extends keyof T>(
     default:
       return state;
   }
-}
+};
 
-export function useDictionary<T, K extends keyof T> (initialState: T) {
+export function useDictionary<T extends object, K extends keyof T>(initialState: T) {
   const mounted = useRef(false);
-  const [state, dispatch] = useReducer<Reducer<T, DictionaryAction<T, K>>>(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(function() {
+  useEffect(function () {
     mounted.current = true;
     return function () {
       mounted.current = false;
     };
   }, []);
 
-  const dispatchOnMounted: typeof dispatch = useCallback((action) => {
-    if (mounted.current) dispatch(action);
-  }, [mounted]);
+  const dispatchOnMounted = useCallback(
+    (action: DictionaryAction<T, K>) => {
+      if (mounted.current) dispatch(action);
+    },
+    [mounted],
+  );
 
-  const onUpdateValue = useCallback(function (
-    key: K,
-    value: T[K]
-  ) {
+  const onUpdateValue = useCallback(function <Key extends K>(key: Key, value: T[Key]) {
     dispatchOnMounted({ type: Action.UpdateValue, key, value });
   }, []);
 
